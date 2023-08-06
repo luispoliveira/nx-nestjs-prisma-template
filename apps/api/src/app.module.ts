@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { ConfigModule } from '@nestjs/config';
 import { DataLayerModule } from '@nx-nestjs-prisma-template/data-layer';
+import { GraphqlModule } from '@nx-nestjs-prisma-template/graphql';
 import { AppService } from './app.service';
 import { configuration } from './config/configuration';
 import { validationSchema } from './config/validation';
@@ -14,6 +15,7 @@ import { validationSchema } from './config/validation';
       validationSchema: validationSchema,
     }),
     DataLayerModule,
+    GraphqlModule,
   ],
   controllers: [],
   providers: [AppService],

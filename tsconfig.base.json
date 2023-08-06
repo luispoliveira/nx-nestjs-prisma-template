@@ -18,8 +18,14 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@nx-nestjs-prisma-template/auth": [
+        "libs/auth/src/index.ts"
+      ],
       "@nx-nestjs-prisma-template/data-layer": [
         "libs/data-layer/src/index.ts"
+      ],
+      "@nx-nestjs-prisma-template/graphql": [
+        "libs/graphql/src/index.ts"
       ],
       "@nx-nestjs-prisma-template/prisma": [
         "libs/prisma/src/index.ts"
