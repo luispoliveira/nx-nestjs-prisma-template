@@ -39,4 +39,8 @@ export class PermissionsService {
       throw e;
     }
   }
+
+  async findMany(args: Prisma.PermissionFindManyArgs) {
+    return await this.prismaService.permission.findMany(args);
+  }
 }

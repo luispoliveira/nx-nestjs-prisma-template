@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@nx-nestjs-prisma-template/prisma';
+import { Role } from '@nx-nestjs-prisma-template/prisma-graphql-generated';
 import { RoleEnum } from '@nx-nestjs-prisma-template/shared';
 import { Prisma } from '@prisma/client';
 @Injectable()
@@ -31,5 +32,18 @@ export class RolesService {
       this.logger.error(e);
       throw e;
     }
+  }
+
+  async findMany(args: Prisma.RoleFindManyArgs): Promise<Role[]> {
+    return await this.prismaService.role.findMany({
+      ...args,
+      include: {
+        role2permission: {
+          include: {
+            permission: true,
+          },
+        },
+      },
+    });
   }
 }

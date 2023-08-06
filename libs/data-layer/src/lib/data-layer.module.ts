@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from '@nx-nestjs-prisma-template/prisma';
 import { ApiKeysService } from './api-keys/api-keys.service';
@@ -10,6 +10,7 @@ import { PermissionsService } from './permissions/permissions.service';
 import { RolesService } from './roles/roles.service';
 import { UsersService } from './users/users.service';
 
+@Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -19,7 +20,6 @@ import { UsersService } from './users/users.service';
     }),
     PrismaModule,
   ],
-  controllers: [],
   providers: [
     DataLayerService,
     UsersService,

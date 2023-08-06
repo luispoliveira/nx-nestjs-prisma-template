@@ -36,13 +36,13 @@ export class UsersService {
       },
     });
 
-    
     if (!user) {
       await this.create({
         data: {
           username: this.adminUser.username,
           email: this.adminUser.email,
           password: await PasswordUtil.hash(this.adminUser.password),
+          isActive: true,
           user2role: {
             create: {
               role: {
@@ -64,6 +64,15 @@ export class UsersService {
   async create(args: Prisma.UserCreateArgs) {
     try {
       return await this.prismaService.user.create(args);
+    } catch (e) {
+      this.logger.error(e);
+      throw e;
+    }
+  }
+
+  async update(args: Prisma.UserUpdateArgs) {
+    try {
+      return await this.prismaService.user.update(args);
     } catch (e) {
       this.logger.error(e);
       throw e;
