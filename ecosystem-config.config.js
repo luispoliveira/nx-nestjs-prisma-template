@@ -16,7 +16,7 @@ module.exports = {
   apps: [
     {
       name: 'NX NESTJS PRISMA API - DEV',
-      script: './dist/apps/api/main.js',
+      script: './dist/apps/backoffice-affilliates/main.js',
       ignore_watch: ['node_modules'],
       instances: instances,
       autorestart: false,

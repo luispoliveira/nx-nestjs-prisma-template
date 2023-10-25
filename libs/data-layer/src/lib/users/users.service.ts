@@ -1,16 +1,37 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@nx-nestjs-prisma-template/prisma';
+import { User } from '@nx-nestjs-prisma-template/prisma-graphql-generated';
 import { PasswordUtil, RoleEnum } from '@nx-nestjs-prisma-template/shared';
 import { Prisma } from '@prisma/client';
 @Injectable()
 export class UsersService {
   private logger = new Logger(UsersService.name);
 
+  private defaultInclude = {
+    Roles2Users: {
+      include: {
+        role: {
+          include: {
+            Permissions2Roles: {
+              include: {
+                permission: true,
+              },
+            },
+          },
+        },
+      },
+    },
+    Permissions2Users: {
+      include: {
+        permission: true,
+      },
+    },
+  };
+
   private adminUser?: {
     email: string;
     password: string;
-    username: string;
   };
 
   constructor(
@@ -20,7 +41,6 @@ export class UsersService {
     this.adminUser = this.configService.get<{
       email: string;
       password: string;
-      username: string;
     }>('admin');
   }
 
@@ -29,8 +49,8 @@ export class UsersService {
 
     const user = await this.findFirst({
       where: {
-        username: {
-          equals: this.adminUser.username,
+        email: {
+          equals: this.adminUser.email,
           mode: 'insensitive',
         },
       },
@@ -39,11 +59,10 @@ export class UsersService {
     if (!user) {
       await this.create({
         data: {
-          username: this.adminUser.username,
           email: this.adminUser.email,
           password: await PasswordUtil.hash(this.adminUser.password),
           isActive: true,
-          user2role: {
+          Roles2Users: {
             create: {
               role: {
                 connect: {
@@ -79,11 +98,88 @@ export class UsersService {
     }
   }
 
-  async findUnique(args: Prisma.UserFindUniqueArgs) {
-    return await this.prismaService.user.findUnique(args);
+  async findUnique(args: Prisma.UserFindUniqueArgs): Promise<User | null> {
+    return await this.prismaService.user.findUnique({
+      ...args,
+      include: this.defaultInclude,
+    });
   }
 
   async findFirst(args: Prisma.UserFindFirstArgs) {
-    return await this.prismaService.user.findFirst(args);
+    return await this.prismaService.user.findFirst({
+      ...args,
+      include: this.defaultInclude,
+    });
+  }
+
+  async findMany(args: Prisma.UserFindManyArgs) {
+    return await this.prismaService.user.findMany({
+      ...args,
+      include: this.defaultInclude,
+    });
+  }
+
+  async getUserRoles(userId: number): Promise<string[]> {
+    const roles = await this.prismaService.role.findMany({
+      where: {
+        isActive: true,
+        Roles2Users: {
+          some: {
+            userId: userId,
+            isActive: true,
+          },
+        },
+      },
+    });
+
+    return roles.map((r) => r.name);
+  }
+
+  async getUserPermissions(userId: number): Promise<string[]> {
+    const allPermissions: string[] = [];
+
+    const permissions = await this.prismaService.permission.findMany({
+      where: {
+        Permissions2Users: {
+          some: {
+            userId: userId,
+            isActive: true,
+          },
+        },
+      },
+    });
+    for (const permission of permissions) {
+      if (!allPermissions.includes(permission.name))
+        allPermissions.push(permission.name);
+    }
+
+    const roles = await this.prismaService.role.findMany({
+      where: {
+        isActive: true,
+        Roles2Users: {
+          some: {
+            userId: userId,
+            isActive: true,
+          },
+        },
+      },
+      include: {
+        Permissions2Roles: {
+          include: {
+            permission: true,
+          },
+        },
+      },
+    });
+
+    for (const role of roles) {
+      const permissions2Roles = role.Permissions2Roles;
+      for (const permission2Role of permissions2Roles) {
+        if (!allPermissions.includes(permission2Role.permission.name))
+          allPermissions.push(permission2Role.permission.name);
+      }
+    }
+
+    return allPermissions;
   }
 }

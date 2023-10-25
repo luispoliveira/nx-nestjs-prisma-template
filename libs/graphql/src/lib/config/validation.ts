@@ -9,5 +9,5 @@ export const validationSchema = Joi.object({
       EnvironmentEnum.Test,
     )
     .default(EnvironmentEnum.Development),
-  port: Joi.number().default(3000),
+  PORT: Joi.number().default(3000),
 });

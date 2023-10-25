@@ -1,9 +1,9 @@
 version: '3.4'
 
 services:
-  nestjs_postgres:
-    container_name: nestjs_postgres
-    image: postgres:15.1
+  nx_nestjs_postgres:
+    container_name: nx_nestjs_postgres
+    image: postgres:16.0
     ports:
       - "5432:5432"
     env_file:

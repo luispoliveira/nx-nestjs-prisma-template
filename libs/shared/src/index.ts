@@ -7,3 +7,5 @@ export * from './lib/utils/api-key.util';
 export * from './lib/utils/context.util';
 export * from './lib/utils/logger.util';
 export * from './lib/utils/password.util';
+export * from './lib/utils/token.util';
+

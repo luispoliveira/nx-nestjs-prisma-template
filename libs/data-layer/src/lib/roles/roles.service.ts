@@ -7,6 +7,14 @@ import { Prisma } from '@prisma/client';
 export class RolesService {
   private logger = new Logger(RolesService.name);
 
+  private defaultInclude: Prisma.RoleInclude = {
+    Permissions2Roles: {
+      include: {
+        permission: true,
+      },
+    },
+  };
+
   constructor(private readonly prismaService: PrismaService) {}
 
   async ensureRoles() {
@@ -37,13 +45,32 @@ export class RolesService {
   async findMany(args: Prisma.RoleFindManyArgs): Promise<Role[]> {
     return await this.prismaService.role.findMany({
       ...args,
-      include: {
-        role2permission: {
-          include: {
-            permission: true,
-          },
-        },
-      },
+      include: this.defaultInclude,
     });
+  }
+
+  async findUnique(args: Prisma.RoleFindUniqueArgs): Promise<Role | null> {
+    return await this.prismaService.role.findUnique({
+      ...args,
+      include: this.defaultInclude,
+    });
+  }
+
+  async create(args: Prisma.RoleCreateArgs): Promise<Role> {
+    try {
+      return await this.prismaService.role.create(args);
+    } catch (e) {
+      this.logger.error(e);
+      throw e;
+    }
+  }
+
+  async update(args: Prisma.RoleUpdateArgs): Promise<Role> {
+    try {
+      return await this.prismaService.role.update(args);
+    } catch (e) {
+      this.logger.error(e);
+      throw e;
+    }
   }
 }

@@ -8,13 +8,15 @@ export class PermissionsService {
   constructor(private readonly prismaService: PrismaService) {}
   async ensurePermissions() {
     for (const permission of Object.values(PermissionEnum)) {
+      const module = permission.split('_')[0];
       await this.upsert({
         where: {
           name: permission,
         },
         create: {
           name: permission,
-          permission2role: {
+          module: module,
+          Permissions2Roles: {
             create: {
               role: {
                 connect: {
@@ -42,5 +44,9 @@ export class PermissionsService {
 
   async findMany(args: Prisma.PermissionFindManyArgs) {
     return await this.prismaService.permission.findMany(args);
+  }
+
+  async findFirst(args: Prisma.PermissionFindFirstArgs) {
+    return await this.prismaService.permission.findFirst(args);
   }
 }
