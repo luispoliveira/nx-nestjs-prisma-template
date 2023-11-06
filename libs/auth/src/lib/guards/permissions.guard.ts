@@ -1,14 +1,14 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { UsersService } from '@nx-nestjs-prisma-template/data-layer';
 import { ContextUtil, PermissionEnum } from '@nx-nestjs-prisma-template/shared';
 import { PERMISSIONS_KEY } from '../decorators/permission.decorator';
+import { RbacService } from '../services/rbac.service';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
-    private readonly usersService: UsersService,
+    private readonly rbacService: RbacService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -21,12 +21,9 @@ export class PermissionsGuard implements CanActivate {
     const requestUser = ContextUtil.getRequest(context).user;
     if (!requestUser) return false;
 
-    const permissions = await this.usersService.getUserPermissions(
+    return await this.rbacService.userHasPermissions(
       requestUser.id,
-    );
-
-    return requiredPermissions.some((permission) =>
-      permissions.includes(permission.toString()),
+      requiredPermissions,
     );
   }
 }

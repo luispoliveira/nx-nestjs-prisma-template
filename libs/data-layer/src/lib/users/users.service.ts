@@ -165,6 +165,9 @@ export class UsersService {
       },
       include: {
         Permissions2Roles: {
+          where: {
+            isActive: true,
+          },
           include: {
             permission: true,
           },
