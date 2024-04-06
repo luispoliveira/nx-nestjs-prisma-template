@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { DataLayerModule } from '@nx-nestjs-prisma-template/data-layer';
@@ -8,6 +8,7 @@ import { RbacService } from './services/rbac.service';
 import { ApiKeyStrategy } from './strategys/api-key.strategy';
 import { JwtStrategy } from './strategys/jwt.strategy';
 
+@Global()
 @Module({
   imports: [
     ConfigModule.forRoot({

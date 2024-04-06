@@ -35,6 +35,9 @@
       ],
       "@nx-nestjs-prisma-template/shared": [
         "libs/shared/src/index.ts"
+      ],
+      "@nx-nestjs-prisma-template/twilio": [
+        "libs/twilio/src/index.ts"
       ]
     }
   },

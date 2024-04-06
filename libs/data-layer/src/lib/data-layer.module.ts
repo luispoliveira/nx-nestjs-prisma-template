@@ -7,6 +7,7 @@ import { configuration } from './config/configuration';
 import { validationSchema } from './config/validation';
 import { DataLayerService } from './data-layer.service';
 import { LogsService } from './logs/logs.service';
+import { OtpsService } from './otps.service';
 import { PermissionsService } from './permissions/permissions.service';
 import { ProfilesService } from './profiles/porfiles.service';
 import { RolesService } from './roles/roles.service';
@@ -31,6 +32,7 @@ import { UsersService } from './users/users.service';
     ApiKeysService,
     AppsService,
     ProfilesService,
+    OtpsService,
   ],
   exports: [
     UsersService,
@@ -40,6 +42,7 @@ import { UsersService } from './users/users.service';
     ApiKeysService,
     AppsService,
     ProfilesService,
+    OtpsService,
   ],
 })
 export class DataLayerModule {}

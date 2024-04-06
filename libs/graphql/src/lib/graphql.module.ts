@@ -3,13 +3,15 @@ import {
   ApolloServerPluginLandingPageProductionDefault,
 } from '@apollo/server/plugin/landingPage/default';
 import { ApolloDriver } from '@nestjs/apollo';
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { EnvironmentEnum } from '@nx-nestjs-prisma-template/shared';
 import { configuration } from './config/configuration';
 import { validationSchema } from './config/validation';
 import { GraphqlResolver } from './graphql.resolver';
+
+@Global()
 @Module({
   imports: [
     ConfigModule.forRoot({

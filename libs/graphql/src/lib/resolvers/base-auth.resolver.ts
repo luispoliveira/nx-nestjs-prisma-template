@@ -1,5 +1,8 @@
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '@nx-nestjs-prisma-template/auth';
+import {
+  JwtAuthGuard,
+  PermissionsGuard,
+} from '@nx-nestjs-prisma-template/auth';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class BaseAuthResolver {}
