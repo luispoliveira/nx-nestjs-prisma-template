@@ -1,6 +1,6 @@
 {
   "name": "@nx-nestjs-prisma-template/source",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",

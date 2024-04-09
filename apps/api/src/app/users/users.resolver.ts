@@ -16,7 +16,6 @@ import {
 } from '@nx-nestjs-prisma-template/data-layer';
 import {
   FindManyUserArgs,
-  FindUniqueUserArgs,
   User,
   UserCreateInput,
   UserUpdateInput,
@@ -52,10 +51,8 @@ export class UsersResolver extends LocalBaseAuthResolver {
 
   @Query(() => User, { name: 'UserFindOne' })
   @Permissions(PermissionEnum.USER_READ)
-  async findOne(@Args() args: FindUniqueUserArgs) {
-    const user = await this.usersService.findUnique(
-      args as Prisma.UserFindUniqueArgs,
-    );
+  async findOne(@Args({ name: 'id', type: () => Int }) userId: number) {
+    const user = await this.usersService.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException();
     return user;
   }
@@ -63,24 +60,24 @@ export class UsersResolver extends LocalBaseAuthResolver {
   @Mutation(() => User, { name: 'UserCreate' })
   @Permissions(PermissionEnum.USER_CREATE)
   async create(
-    @Args({ name: 'userInput', type: () => UserCreateInput })
-    userInput: UserCreateInput,
+    @Args({ name: 'input', type: () => UserCreateInput })
+    input: UserCreateInput,
 
     @GetUser() user: UserValidate,
   ) {
     const data = {
-      ...userInput,
+      ...input,
       isActive: false,
       password: await PasswordUtil.generate(12),
       activationToken: TokenUtil.generate(),
       activationTokenExpires: TokenUtil.getExpirationDate(),
-      createdBy: userInput.email,
-      updatedBy: userInput.email,
+      createdBy: user.email,
+      updatedBy: user.email,
     };
 
     try {
       const newUser = await this.usersService.create({
-        data: data as any as Prisma.UserCreateInput,
+        data: data,
       });
 
       /**
@@ -97,8 +94,8 @@ export class UsersResolver extends LocalBaseAuthResolver {
   @Permissions(PermissionEnum.USER_UPDATE, PermissionEnum.USER_UPDATE_OTHER)
   async update(
     @Args({ name: 'id', type: () => Int }) userId: number,
-    @Args({ name: 'data', type: () => UserUpdateInput })
-    userInput: UserUpdateInput,
+    @Args({ name: 'input', type: () => UserUpdateInput })
+    input: UserUpdateInput,
     @GetUser() user: UserValidate,
   ) {
     const where = {
@@ -113,19 +110,17 @@ export class UsersResolver extends LocalBaseAuthResolver {
     }
 
     try {
-      if (userInput.password.set)
-        userInput.password.set = await PasswordUtil.hash(
-          userInput.password.set,
-        );
+      if (input.password.set)
+        input.password.set = await PasswordUtil.hash(input.password.set);
 
       const data = {
-        ...userInput,
+        ...input,
         updatedBy: user.email,
       };
 
       return await this.usersService.update({
-        where: where as Prisma.UserWhereUniqueInput,
-        data: data as Prisma.UserUpdateInput,
+        where: where,
+        data: data,
       });
     } catch (e) {
       throw new BadRequestException(e.message);
@@ -173,7 +168,7 @@ export class UsersResolver extends LocalBaseAuthResolver {
   }
 
   @Mutation(() => User, { name: 'UserLinkRole' })
-  @Permissions(PermissionEnum.USER_LINK_ROLE)
+  @Permissions(PermissionEnum.RBAC_LINK_ROLE_USER)
   async linkRole(
     @Args({ name: 'userId', type: () => Int }) userId: number,
     @Args({ name: 'roleId', type: () => Int }) roleId: number,
@@ -215,7 +210,7 @@ export class UsersResolver extends LocalBaseAuthResolver {
   }
 
   @Mutation(() => User, { name: 'UserUnlinkRole' })
-  @Permissions(PermissionEnum.USER_LINK_ROLE)
+  @Permissions(PermissionEnum.RBAC_LINK_ROLE_USER)
   async unlinkRole(
     @Args({ name: 'userId', type: () => Int }) userId: number,
     @Args({ name: 'roleId', type: () => Int }) roleId: number,
@@ -257,7 +252,7 @@ export class UsersResolver extends LocalBaseAuthResolver {
   }
 
   @Mutation(() => User, { name: 'UserLinkPermission' })
-  @Permissions(PermissionEnum.USER_LINK_PERMISSION)
+  @Permissions(PermissionEnum.RBAC_LINK_PERM_USER)
   async linkPermission(
     @Args({ name: 'userId', type: () => Int }) userId: number,
     @Args({ name: 'permissionId', type: () => Int }) permissionId: number,
@@ -299,7 +294,7 @@ export class UsersResolver extends LocalBaseAuthResolver {
   }
 
   @Mutation(() => User, { name: 'UserUnLinkPermission' })
-  @Permissions(PermissionEnum.USER_LINK_PERMISSION)
+  @Permissions(PermissionEnum.RBAC_LINK_PERM_USER)
   async unlinkPermission(
     @Args({ name: 'userId', type: () => Int }) userId: number,
     @Args({ name: 'permissionId', type: () => Int }) permissionId: number,

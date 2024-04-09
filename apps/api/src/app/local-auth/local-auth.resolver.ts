@@ -28,7 +28,14 @@ export class LocalAuthResolver extends LocalBaseAuthResolver {
     return await this.authService.login(user);
   }
 
+  @Mutation(() => Login, { name: 'AuthVerifyLogin' })
+  @Public()
+  async verifyLogin(@Args({ name: 'otp', type: () => String }) code: string) {
+    return await this.authService.verifyOtp(code);
+  }
+
   @Mutation(() => User, { name: 'AuthRegister' })
+  @Public()
   async register(@Args({ name: 'email', type: () => String }) email: string) {
     try {
       await this.usersResolver.create({ email }, {
@@ -37,12 +44,6 @@ export class LocalAuthResolver extends LocalBaseAuthResolver {
     } catch (e) {
       throw new BadRequestException(e.message);
     }
-  }
-
-  @Mutation(() => Login, { name: 'AuthVerifyLogin' })
-  @Public()
-  async verifyLogin(@Args({ name: 'otp', type: () => String }) code: string) {
-    return await this.authService.verifyOtp(code);
   }
 
   @Mutation(() => User, { name: 'AuthWhoAmI' })
