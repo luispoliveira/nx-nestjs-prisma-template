@@ -23,6 +23,7 @@ import { GraphqlResolver } from './graphql.resolver';
       debug: process.env['ENVIRONMENT'] === EnvironmentEnum.Development,
       playground: false,
       driver: ApolloDriver,
+      useGlobalPrefix: true,
       plugins:
         process.env['ENVIRONMENT'] === EnvironmentEnum.Production
           ? [ApolloServerPluginLandingPageProductionDefault()]
