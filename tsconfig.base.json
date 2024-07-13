@@ -10,39 +10,22 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": [
-      "es2020",
-      "dom"
-    ],
+    "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@nx-nestjs-prisma-template/auth": [
-        "libs/auth/src/index.ts"
-      ],
-      "@nx-nestjs-prisma-template/data-layer": [
-        "libs/data-layer/src/index.ts"
-      ],
-      "@nx-nestjs-prisma-template/graphql": [
-        "libs/graphql/src/index.ts"
-      ],
-      "@nx-nestjs-prisma-template/prisma": [
-        "libs/prisma/src/index.ts"
-      ],
+      "@nx-nestjs-prisma-template/auth": ["libs/auth/src/index.ts"],
+      "@nx-nestjs-prisma-template/data-layer": ["libs/data-layer/src/index.ts"],
+      "@nx-nestjs-prisma-template/graphql": ["libs/graphql/src/index.ts"],
+      "@nx-nestjs-prisma-template/prisma": ["libs/prisma/src/index.ts"],
       "@nx-nestjs-prisma-template/prisma-graphql-generated": [
         "prisma/__generated__/prisma-nestjs-graphql/index.ts"
       ],
-      "@nx-nestjs-prisma-template/shared": [
-        "libs/shared/src/index.ts"
-      ],
-      "@nx-nestjs-prisma-template/twilio": [
-        "libs/twilio/src/index.ts"
-      ]
+      "@nx-nestjs-prisma-template/queue": ["libs/queue/src/index.ts"],
+      "@nx-nestjs-prisma-template/shared": ["libs/shared/src/index.ts"],
+      "@nx-nestjs-prisma-template/twilio": ["libs/twilio/src/index.ts"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

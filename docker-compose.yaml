@@ -10,5 +10,9 @@ services:
       - ./docker/postgres.env
     volumes:
       - ${DOCKER_POSTGRES_PATH}:/var/lib/postgresql/data
-
+  nx_nestjs_redis:
+    container_name: nx_nestjs_redis
+    image: redis:7.2.5
+    ports:
+      - "6379:6379"
 #HOW TO RUN: docker-compose up --build -d
