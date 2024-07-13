@@ -6,10 +6,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import {
-  GoogleOauthDataType,
-  JwtPayloadType,
-} from '@nx-nestjs-prisma-template/auth';
+import { JwtPayloadType, OauthDataType } from '@nx-nestjs-prisma-template/auth';
 import {
   OtpsService,
   UsersService,
@@ -79,7 +76,7 @@ export class LocalAuthService {
       await this.twilioService.sendSms(user.twoFAPhone, `Your OTP is ${otp}`);
   }
 
-  async loginGoogle(user: GoogleOauthDataType) {
+  async loginOAuth(user: OauthDataType) {
     const existingUser = await this.usersService.findFirst({
       where: {
         email: user.email,

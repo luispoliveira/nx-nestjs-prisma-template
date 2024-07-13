@@ -7,7 +7,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
   private logger = new Logger(PrismaService.name);
 
   constructor(private readonly configService: ConfigService) {
-    const log: Prisma.LogLevel[] = ['warn', 'error'];
+    let log: Prisma.LogLevel[] = ['warn', 'error'];
     switch (configService.get<EnvironmentEnum>('environment')) {
       case EnvironmentEnum.Development:
         log.push('info');
@@ -17,6 +17,10 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         log.push('info');
         break;
     }
+    const logPrisma = configService.get<boolean>('logPrisma');
+
+    if (!logPrisma) log = [];
+
     super({
       log: log,
       errorFormat: 'pretty',

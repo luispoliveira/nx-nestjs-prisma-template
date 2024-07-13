@@ -9,5 +9,7 @@ export const validationSchema = Joi.object({
       EnvironmentEnum.Production,
       EnvironmentEnum.Test,
     )
+
     .default(EnvironmentEnum.Development),
+  LOG_PRISMA: Joi.boolean().default(true),
 });

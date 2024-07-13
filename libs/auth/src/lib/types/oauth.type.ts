@@ -1,5 +1,5 @@
-export type GoogleOauthDataType = {
-  provider: 'google';
+export type OauthDataType = {
+  provider: 'google' | 'facebook';
   providerId: string;
   email: string;
   profile?: {

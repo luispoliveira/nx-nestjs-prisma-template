@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth2';
-import { GoogleOauthDataType } from '../types/google-oauth.type';
+import { OauthDataType } from '../types/oauth.type';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
@@ -23,12 +23,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     done: VerifyCallback,
   ): Promise<any> {
     const { id, name, emails, photos } = profile;
-    console.log(
-      '🚀 ~ GoogleStrategy ~ classGoogleStrategyextendsPassportStrategy ~ profile:',
-      profile,
-    );
 
-    const user: GoogleOauthDataType = {
+    const user: OauthDataType = {
       provider: 'google',
       providerId: id,
       email: emails[0].value,
