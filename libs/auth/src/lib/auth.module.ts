@@ -6,6 +6,7 @@ import { configuration } from './config/configuration';
 import { validationSchema } from './config/validation';
 import { RbacService } from './services/rbac.service';
 import { ApiKeyStrategy } from './strategys/api-key.strategy';
+import { GoogleStrategy } from './strategys/google.strategy';
 import { JwtStrategy } from './strategys/jwt.strategy';
 
 @Global()
@@ -29,7 +30,7 @@ import { JwtStrategy } from './strategys/jwt.strategy';
     }),
     DataLayerModule,
   ],
-  providers: [JwtStrategy, ApiKeyStrategy, RbacService],
+  providers: [JwtStrategy, ApiKeyStrategy, RbacService, GoogleStrategy],
   exports: [JwtModule, RbacService],
 })
 export class AuthModule {}

@@ -6,7 +6,10 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayloadType } from '@nx-nestjs-prisma-template/auth';
+import {
+  GoogleOauthDataType,
+  JwtPayloadType,
+} from '@nx-nestjs-prisma-template/auth';
 import {
   OtpsService,
   UsersService,
@@ -74,6 +77,63 @@ export class LocalAuthService {
 
     if (user.twoFAPhone && user.twoFAPhoneVerified)
       await this.twilioService.sendSms(user.twoFAPhone, `Your OTP is ${otp}`);
+  }
+
+  async loginGoogle(user: GoogleOauthDataType) {
+    const existingUser = await this.usersService.findFirst({
+      where: {
+        email: user.email,
+        isActive: true,
+      },
+    });
+
+    if (!existingUser) {
+      const newUser = await this.usersService.create({
+        data: {
+          email: user.email,
+          password: await PasswordUtil.hash(PasswordUtil.generate(12)),
+          isActive: true,
+          twoFA: false,
+          createdBy: 'GOOGLE_AUTH',
+          updatedBy: 'GOOGLE_AUTH',
+          Profile: {
+            create: {
+              firstName: user.profile?.firstName,
+              lastName: user.profile?.lastName,
+              createdBy: 'GOOGLE_AUTH',
+              updatedBy: 'GOOGLE_AUTH',
+            },
+          },
+        },
+      });
+
+      const permissions = await this.usersService.getUserPermissions(
+        newUser.id,
+      );
+      const roles = await this.usersService.getUserRoles(newUser.id);
+
+      const payload: JwtPayloadType = {
+        userId: newUser.id,
+        email: newUser.email,
+        permissions,
+        roles,
+      };
+
+      return await this.signJwt(payload);
+    }
+    const permissions = await this.usersService.getUserPermissions(
+      existingUser.id,
+    );
+    const roles = await this.usersService.getUserRoles(existingUser.id);
+
+    const payload: JwtPayloadType = {
+      userId: existingUser.id,
+      email: existingUser.email,
+      permissions,
+      roles,
+    };
+
+    return await this.signJwt(payload);
   }
 
   async verifyOtp(code: string) {
