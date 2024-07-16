@@ -3694,15 +3694,6 @@
     "@sentry/types" "8.18.0"
     "@sentry/utils" "8.18.0"
 
-"@sentry/esbuild-plugin@^2.21.1":
-  version "2.21.1"
-  resolved "https://registry.yarnpkg.com/@sentry/esbuild-plugin/-/esbuild-plugin-2.21.1.tgz#b043613fae076287d6f4e13a4b2958fc0c3d8680"
-  integrity sha512-abrK/45MY51pG9fj81PuMAcl3t9DcpKwSsDPdgbcCHSJciJlz6v2B4Xgx0612IfnoxM9eEj8WF7Ta+qUVwEgAg==
-  dependencies:
-    "@sentry/bundler-plugin-core" "2.21.1"
-    unplugin "1.0.1"
-    uuid "^9.0.0"
-
 "@sentry/nestjs@^8.18.0":
   version "8.18.0"
   resolved "https://registry.yarnpkg.com/@sentry/nestjs/-/nestjs-8.18.0.tgz#ef961c6eb73aa1d26a8d3fe4d2f65cdb4d213257"
@@ -3778,6 +3769,15 @@
   integrity sha512-7wq7cgaeSIGJncl9/2VMu81ZN5ep4lp4H1/+O8+xUxOmnPb/05ZZcbn9/VxVQvIoqZSZdwCLPeBz6PEVukvokA==
   dependencies:
     "@sentry/types" "8.18.0"
+
+"@sentry/webpack-plugin@^2.21.1":
+  version "2.21.1"
+  resolved "https://registry.yarnpkg.com/@sentry/webpack-plugin/-/webpack-plugin-2.21.1.tgz#ea0fa50508b4bb3d7cbdb25379edbf7b251e7fdc"
+  integrity sha512-mhKWQq7/eC35qrhhD8oXm/37vZ1BQqmCD8dUngFIr4D24rc7dwlGwPGOYv59yiBqjTS0fGJ+o0xC5PTRKljGQQ==
+  dependencies:
+    "@sentry/bundler-plugin-core" "2.21.1"
+    unplugin "1.0.1"
+    uuid "^9.0.0"
 
 "@sideway/address@^4.1.5":
   version "4.1.5"

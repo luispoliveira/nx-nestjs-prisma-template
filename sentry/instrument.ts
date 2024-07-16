@@ -6,4 +6,5 @@ Sentry.init({
   integrations: [nodeProfilingIntegration(), Sentry.prismaIntegration()],
   tracesSampleRate: 1.0,
   profilesSampleRate: 1.0,
+  environment: process.env.ENVIRONMENT || 'development',
 });

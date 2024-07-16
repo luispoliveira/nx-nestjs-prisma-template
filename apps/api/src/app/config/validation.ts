@@ -8,4 +8,9 @@ export const validationSchema = Joi.object({
     then: Joi.string().required(),
     otherwise: Joi.string().allow(''),
   }),
+  SENTRY_AUTH_TOKEN: Joi.alternatives().conditional('HAS_SENTRY', {
+    is: true,
+    then: Joi.string().required(),
+    otherwise: Joi.string().allow(''),
+  }),
 });
