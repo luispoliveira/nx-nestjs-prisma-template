@@ -2,9 +2,15 @@
  * This is not a production server yet!
  * This is only a minimal backend to get started.
  */
+import 'sentry/instrument';
 
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import {
+  BaseExceptionFilter,
+  HttpAdapterHost,
+  NestFactory,
+} from '@nestjs/core';
+import * as Sentry from '@sentry/nestjs';
 
 import { ConfigService } from '@nestjs/config';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -35,6 +41,12 @@ async function bootstrap() {
   SwaggerModule.setup(`api/api-docs`, app, swaggerDocument);
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
+  const hasSentry = config.get<boolean>('hasSentry');
+  if (hasSentry) {
+    const { httpAdapter } = app.get(HttpAdapterHost);
+    Sentry.setupNestErrorHandler(app, new BaseExceptionFilter(httpAdapter));
+  }
 
   await app.listen(port, async () => {
     Logger.log(`🚀 Application is running on: ${await app.getUrl()}`);

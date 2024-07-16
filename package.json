@@ -1,6 +1,6 @@
 {
   "name": "@nx-nestjs-prisma-template/source",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
@@ -27,6 +27,9 @@
     "@nestjs/platform-express": "10.3.10",
     "@nestjs/swagger": "7.4.0",
     "@prisma/client": "5.16.2",
+    "@sentry/esbuild-plugin": "^2.21.1",
+    "@sentry/nestjs": "^8.18.0",
+    "@sentry/profiling-node": "^8.18.0",
     "axios": "1.7.2",
     "bcrypt": "5.1.1",
     "bullmq": "^5.8.7",
